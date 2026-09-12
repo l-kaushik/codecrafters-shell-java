@@ -14,8 +14,9 @@ public class Shell {
 
     private boolean processCommands(String commandInput) {
         if(commandInput.isBlank()) return false;
-        String command = extractCommandParts(commandInput)[0];
-        String args = extractCommandParts(commandInput)[1];
+        String[] parts = extractCommandParts(commandInput);
+        String command = parts[0];
+        String args = parts[1];
 
         // Exits from the terminal
         switch (command) {
