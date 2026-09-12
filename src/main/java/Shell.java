@@ -27,7 +27,7 @@ public class Shell {
             case "type" -> {
                 // TODO: find a way to keep track of builtin commands (maybe use enums)
 
-                if(args.equals("exit") || args.equals("echo")) {
+                if(args.equals("exit") || args.equals("echo") || args.equals("type")) {
                     System.out.println(args + " is a shell builtin");
                 }
                 else{
