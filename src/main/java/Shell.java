@@ -8,25 +8,25 @@ public class Shell {
         while(true) {
             System.out.print("$ ");
             command = scanner.nextLine();
-            processCommands(command);
+            if(processCommands(command)) return;
         }
     }
 
-    private void processCommands(String commandInput) {
-        if(commandInput.isBlank()) return;
+    private boolean processCommands(String commandInput) {
+        if(commandInput.isBlank()) return false;
         String command = extractCommandParts(commandInput)[0];
         String args = extractCommandParts(commandInput)[1];
-        
-        
+
         // Exits from the terminal
         switch (command) {
-            case "exit" -> {}
+            case "exit" -> {return true;}
             case "echo" -> {
                 System.out.println(args);
             }
             default -> System.out.println(command + ": command not found");
         }
 
+        return false;
     }
 
     private String[] extractCommandParts(String commandInput) {
@@ -35,5 +35,4 @@ public class Shell {
         if(parts.length == 1) return new String[]{parts[0], ""};
         return parts;
     }
-
 }
