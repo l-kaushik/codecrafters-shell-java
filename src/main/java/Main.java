@@ -1,18 +1,8 @@
-import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) throws Exception {
-        Scanner scanner = new Scanner(System.in);
-        String command = "";
-        while(true) {
-            System.out.print("$ ");
-            command = scanner.nextLine();
-
-            if(command.equals("exit")) {
-                return;
-            }
-
-            System.out.println(command + ": command not found");
+    public static void main(String[] args){
+            Shell shell = new Shell();
+            shell.invoke();
         }
     }
 }
