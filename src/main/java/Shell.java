@@ -24,6 +24,16 @@ public class Shell {
             case "echo" -> {
                 System.out.println(args);
             }
+            case "type" -> {
+                // TODO: find a way to keep track of builtin commands (maybe use enums)
+
+                if(args.equals("exit") || args.equals("echo")) {
+                    System.out.println(args + " is a shell builtin");
+                }
+                else{
+                    System.out.println(args + ": not found");
+                }
+            }
             default -> System.out.println(command + ": command not found");
         }
 
