@@ -45,7 +45,7 @@ public class Shell {
                 System.out.println(args);
             }
             case TYPE -> handleTypeCommand(args);
-            default -> System.out.println(command + ": command not found");
+            default -> System.out.println(parts[0] + ": command not found");
         }
 
         return false;
