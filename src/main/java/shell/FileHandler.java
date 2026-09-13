@@ -12,7 +12,6 @@ public class FileHandler {
         Optional<Path> validFile = Optional.empty();
 
         for(String eachDir : paths) {
-            System.out.println("Current directory: " + eachDir);
             Path startPath = Paths.get(eachDir);
 
             if(!Files.exists(startPath)) continue;
