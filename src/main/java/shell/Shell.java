@@ -2,6 +2,7 @@ package shell;
 
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.Scanner;
 import java.util.stream.Stream;
 
@@ -46,18 +47,22 @@ public class Shell {
     }
 
     private boolean findAndExecute(String command, String args) {
-        String path = FileHandler.searchExecutableFile(directories, command)
+        Optional<Path> pathObj = FileHandler.searchExecutableFile(directories, command);
+
+        if(pathObj.isEmpty()) return false;
+
+        String fileName = pathObj.get().getFileName().toString();
+        String parentPath = pathObj
                 .map(Path::toAbsolutePath)
+                .map(Path::getParent)
                 .map(Path::toString)
                 .orElse("");
 
-        if(path.isBlank()) return false;
-
         String trimmed = args.trim();
-        String[] commands = trimmed.isEmpty() ? new String[] {path}
-                : Stream.concat(Stream.of(path), Arrays.stream(trimmed.split("\\s+"))
+        String[] commands = trimmed.isEmpty() ? new String[] {fileName}
+                : Stream.concat(Stream.of(fileName), Arrays.stream(trimmed.split("\\s+"))
             ).toArray(String[]::new);
-        FileHandler.executeFile(commands);
+        FileHandler.executeFile(parentPath, commands);
         return true;
     }
 

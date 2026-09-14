@@ -1,9 +1,12 @@
 package shell;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -46,9 +49,19 @@ public class FileHandler {
         return validFile;
     }
 
-    public static void executeFile(String[] command) {
+    public static void executeFile(String parentPath, String[] command) {
         try{
-            ProcessBuilder processBuilder = new ProcessBuilder(command);
+            ProcessBuilder processBuilder = null;
+
+            if(IS_WINDOWS) {
+                String[] newCommand = command.clone();
+                newCommand[0] = parentPath + "\\" + command[0];
+                processBuilder = new ProcessBuilder(newCommand);
+            }
+            else {
+                processBuilder = new ProcessBuilder(command);
+            }
+
             processBuilder.inheritIO();
             Process process = processBuilder.start();
             int exitCode = process.waitFor();
