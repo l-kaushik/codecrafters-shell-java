@@ -1,17 +1,6 @@
 package shell;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
-
-/*
-1. find a way to store all builtin commands without updating the list manually
-
-2. find a way to access PATH env variable in program
-3. check if provided command is builtin, if not then lookout for each file in each directory provided in PATH env.
-4. if file exists and has executable permission print <command> is <full path>
-5. else command not found
- */
 
 public class Shell {
     Scanner scanner = new Scanner(System.in);
