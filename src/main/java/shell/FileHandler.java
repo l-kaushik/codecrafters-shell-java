@@ -13,7 +13,7 @@ public class FileHandler {
     private static final Set<String> WINDOWS_EXECUTABLE_EXTENSIONS = Set.of("exe", "bat", "cmd", "com", "msi");
     private static final boolean IS_WINDOWS = System.getProperty("os.name").toLowerCase().contains("win");
 
-    public static String searchExecutableFile(String[] paths, String targetFileName){
+    public static Optional<Path> searchExecutableFile(String[] paths, String targetFileName){
         Optional<Path> validFile = Optional.empty();
 
         for(String eachDir : paths) {
@@ -41,9 +41,23 @@ public class FileHandler {
             } catch (IOException e) {
                 System.err.println("Could not read directory " + eachDir + ": " + e.getMessage());
             }
-
-            if(validFile.isPresent()) return validFile.get().toAbsolutePath().toString();
+            if(validFile.isPresent()) return validFile;
         }
-        return "";
+        return validFile;
+    }
+
+    public static void executeFile(String[] command) {
+        try{
+            ProcessBuilder processBuilder = new ProcessBuilder(command);
+            processBuilder.inheritIO();
+            Process process = processBuilder.start();
+            int exitCode = process.waitFor();
+//            System.out.println("Process exited with code: " + exitCode);
+        } catch (IOException e) {
+            System.err.println("Failed to start the process: " + e.getMessage());
+        } catch (InterruptedException e) {
+            System.err.println("The process was interrupted: " + e.getMessage());
+            Thread.currentThread().interrupt(); // Restore interrupted status
+        }
     }
 }

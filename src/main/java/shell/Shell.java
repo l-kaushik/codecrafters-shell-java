@@ -1,6 +1,10 @@
 package shell;
 
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.Optional;
 import java.util.Scanner;
+import java.util.stream.Stream;
 
 public class Shell {
     Scanner scanner = new Scanner(System.in);
@@ -24,20 +28,38 @@ public class Shell {
     private boolean processCommands(String commandInput) {
         if(commandInput.isBlank()) return false;
         String[] parts = extractCommandParts(commandInput);
-        Command command = Command.fromString(parts[0]);
+        String command = parts[0];
+        Command commandEnum = Command.fromString(parts[0]);
         String args = parts[1];
 
         // Exits from the terminal
-        switch (command) {
+        switch (commandEnum) {
             case EXIT -> {return true;}
-            case ECHO -> {
-                System.out.println(args);
-            }
+            case ECHO -> System.out.println(args);
             case TYPE -> handleTypeCommand(args);
-            default -> System.out.println(parts[0] + ": command not found");
+            default -> {
+                if(!findAndExecute(command, args)){
+                    System.out.println(parts[0] + ": command not found");
+                }
+            }
         }
-
         return false;
+    }
+
+    private boolean findAndExecute(String command, String args) {
+        Optional<Path> pathObj = FileHandler.searchExecutableFile(directories, command);
+        String path = pathObj.map(Path::toAbsolutePath)
+                .map(Path::toString)
+                .orElse("");
+
+        if(path.isBlank()) return false;
+
+        String[] commands = Stream.concat(
+                    Stream.of(path, pathObj.get().getFileName().toString()),
+                    Arrays.stream(args.trim().split("\\s+"))
+                ).toArray(String[]::new);
+        FileHandler.executeFile(commands);
+        return true;
     }
 
     private void handleTypeCommand(String args) {
@@ -46,7 +68,9 @@ public class Shell {
             return;
         }
 
-        String filePath = FileHandler.searchExecutableFile(directories, args);
+        String filePath = FileHandler.searchExecutableFile(directories, args)
+                .map(Path::toString)
+                .orElse("");
         if(!filePath.isBlank()){
             System.out.println(args + " is " + filePath);
         }
