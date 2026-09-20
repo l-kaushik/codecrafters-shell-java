@@ -4,6 +4,7 @@ public enum Command {
     EXIT("exit"),
     ECHO("echo"),
     TYPE("type"),
+    PWD("pwd"),
     UNKNOWN("");
 
     private final String text;

@@ -37,6 +37,7 @@ public class Shell {
             case EXIT -> {return true;}
             case ECHO -> System.out.println(args);
             case TYPE -> handleTypeCommand(args);
+            case PWD -> System.out.println(System.getProperty("user.dir"));
             default -> {
                 if(!findAndExecute(command, args)){
                     System.out.println(parts[0] + ": command not found");
